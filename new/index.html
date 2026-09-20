@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTT Content Recommender – AI-Powered Personalization</title>
+  <meta name="description" content="OTT Content Recommender uses k-NN collaborative filtering, genre equivalence classes (DMGT), and co-watch graphs (ADSA) to deliver personalized content recommendations.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── Loader ─────────────────────────────────────────────────── -->
+<div id="loader">
+  <div class="loader-logo">OTT Recommender</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- ── Navbar ─────────────────────────────────────────────────── -->
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">OTT<span style="color:var(--txt2);font-weight:400;"> Recommender</span></div>
+  <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+  <div class="nav-links" id="navLinks">
+    <a class="nav-link active" href="#hero">Home</a>
+    <a class="nav-link" href="#trending">Trending</a>
+    <a class="nav-link" href="#for-you">For You</a>
+    <a class="nav-link" href="#browse">Browse</a>
+    <a class="nav-link" href="#algo-section">Algorithms</a>
+  </div>
+  <div class="nav-right">
+    <!-- Search -->
+    <div class="search-wrap" id="searchWrap">
+      <span class="s-icon" id="searchToggle">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search movies, shows…" autocomplete="off">
+    </div>
+    <!-- k slider -->
+    <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--txt2);">
+      <span>k=</span>
+      <select id="kSelect" style="background:var(--bg3);color:var(--txt);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-family:inherit;font-size:.82rem;cursor:pointer;">
+        <option value="3">3</option>
+        <option value="5" selected>5</option>
+        <option value="7">7</option>
+      </select>
+    </div>
+    <!-- User selector -->
+    <div class="user-wrap" id="userWrap">
+      <div class="user-sel" id="userSelBtn">
+        <div class="user-avatar" id="userAvatar">A</div>
+        <span id="userSelName">Alice</span>
+        <span>▾</span>
+      </div>
+      <div class="user-dropdown" id="userDropdown"></div>
+    </div>
+    <!-- Algo button -->
+    <button class="btn-algo" id="btnAlgo">🔬 How It Works</button>
+  </div>
+</nav>
+
+<!-- ── Hero ───────────────────────────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+  <div class="hero-content" id="heroContent">
+    <div class="hero-badge">🎬 OTT CONTENT RECOMMENDER &nbsp;·&nbsp; AI Personalization</div>
+    <h1 class="hero-title" id="heroTitle">Loading…</h1>
+    <div class="hero-meta" id="heroMeta"></div>
+    <p class="hero-desc" id="heroDesc">Fetching personalized content…</p>
+    <div class="hero-actions">
+      <button class="btn-play" id="heroPlay">▶ &nbsp;Play Now</button>
+      <button class="btn-info-hero" id="heroInfo">ℹ &nbsp;More Info</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Main Content ────────────────────────────────────────────── -->
+<main class="content-main">
+
+  <!-- Trending -->
+  <section id="trending">
+    <div class="section-header">
+      <h2 class="section-title">🔥 Trending Now <span class="section-badge badge-hot">HOT</span></h2>
+      <span class="see-all">See All →</span>
+    </div>
+    <div class="h-scroll" id="trendingRow"></div>
+  </section>
+
+  <!-- Recently Watched -->
+  <section id="recently-watched">
+    <div class="section-header">
+      <h2 class="section-title">🕐 Recently Watched</h2>
+    </div>
+    <div class="h-scroll" id="recentRow"></div>
+  </section>
+
+  <!-- For You -->
+  <section id="for-you">
+    <div class="section-header">
+      <h2 class="section-title">✨ For You <span class="section-badge badge-ai">AI · k-NN</span></h2>
+      <span class="see-all" id="knnLink" style="cursor:pointer;color:var(--purpleL);">See how it works →</span>
+    </div>
+    <div class="for-you-grid" id="forYouGrid"></div>
+  </section>
+
+  <!-- Browse by Genre -->
+  <section id="browse">
+    <div class="section-header">
+      <h2 class="section-title">🎬 Browse by Genre</h2>
+    </div>
+    <div class="genre-chips" id="genreChips"></div>
+    <div class="browse-grid" id="browseGrid"></div>
+  </section>
+
+  <!-- Algorithm Visualizations (inline section) -->
+  <section id="algo-section" style="padding-top:60px;">
+    <div class="section-header">
+      <h2 class="section-title">🔬 Algorithm Visualizations &nbsp;<span style="font-size:.75rem;color:var(--txt3);font-weight:400;">DMGT · ADSA · OOPJ · Python k-NN</span></h2>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:var(--radiusXL);overflow:hidden;">
+      <div class="viz-tabs" style="padding:20px 24px 0;" id="inlineVizTabs">
+        <button class="viz-tab active" data-vtab="genres">Genre Equivalence Classes</button>
+        <button class="viz-tab" data-vtab="graph">Co-Watch Graph</button>
+        <button class="viz-tab" data-vtab="knn">k-NN Process</button>
+        <button class="viz-tab" data-vtab="pipeline">System Pipeline</button>
+      </div>
+      <div style="padding:24px;">
+
+        <!-- Tab: Genre Classes -->
+        <div class="viz-pane active" id="vtab-genres">
+          <div class="viz-desc">
+            <strong>DMGT: Genre Equivalence Classes</strong> — Using <strong>Union-Find (Disjoint Set Union)</strong>, Java groups genres into equivalence classes.
+            The equivalence relation partitions all genres: <strong>Action ≡ Thriller</strong>, <strong>Drama ≡ Romance</strong>, <strong>Sci-Fi ≡ Horror</strong>.
+            This allows the recommender to suggest content across equivalent genres, not just identical ones.
+          </div>
+          <div class="viz-canvas-wrap" id="genreVizWrap" style="height:380px;"></div>
+        </div>
+
+        <!-- Tab: Co-Watch Graph -->
+        <div class="viz-pane" id="vtab-graph">
+          <div class="viz-desc">
+            <strong>ADSA: Co-Watch Graph</strong> — Java builds a <strong>weighted undirected graph</strong> (adjacency list) where
+            nodes are content items and edges connect items watched together by the same user.
+            Edge thickness = co-watch frequency. Drag nodes to explore the graph.
+          </div>
+          <div class="viz-canvas-wrap" id="graphVizWrap" style="height:480px;"></div>
+        </div>
+
+        <!-- Tab: k-NN -->
+        <div class="viz-pane" id="vtab-knn">
+          <div class="viz-desc">
+            <strong>Python: k-Nearest Neighbours Collaborative Filtering</strong> — The recommendation engine computes
+            <strong>cosine similarity</strong> between the target user and all others, selects <em>k</em> nearest neighbours,
+            then performs <strong>weighted aggregation</strong> of their ratings to produce ranked recommendations.
+          </div>
+          <div id="knnVizArea"></div>
+        </div>
+
+        <!-- Tab: Pipeline -->
+        <div class="viz-pane" id="vtab-pipeline">
+          <div class="viz-desc">
+            <strong>System Pipeline</strong> — Shows how all four subjects combine.
+            Java handles the data modelling and graph construction; Python runs the k-NN algorithm; the frontend presents results.
+          </div>
+          <div id="pipelineArea"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Content Modal ──────────────────────────────────────────── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-hero" id="modalHero">
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="modalTitle"></h2>
+      <div class="modal-meta" id="modalMeta"></div>
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="modal-tags" id="modalTags"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
